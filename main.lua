@@ -22,22 +22,9 @@ end
 function title_draw()
   cls()
   map(0,0,0,0,16,16)
-  pal(0,7,1)
-  pal(1,6,1)
-  pal(2,13,1)
-  pal(3,12,1)
-  pal(4,140,1)
-  pal(5,143,1)
-  pal(6,143,1)
-  pal(7,143,1)
-  pal(8,143,1)
-  pal(9,143,1)
-  pal(10,143,1)
-  pal(11,143,1)
-  pal(12,143,1)
-  pal(13,143,1)
-  pal(14,143,1)
-  pal(15,143,1)
+  for i=1,16 do
+    pal(i-1,data.title_pal[i],1)
+  end
 end
 
 function fadeout_draw()
