@@ -1,18 +1,29 @@
 function _init()
+  -- switch upper ROM to RAM, render sprite 0 opaque
+  poke(0x5f36,0x18)
   palt(0,false)
-  poke(0x5f36,8)
   update=nil
-  draw=title_draw
+  draw=nil
   t=0
   fading=0
+  script_index=1
+  script={
+    { t=0, draw=title_draw },
+    { t=120, draw=fadeout_draw },
+    { t=175, init=lens_init, draw=lens_draw, update=lens_update}
+  }
 end
    
 function _update60()
+  if (script_index>#script) return
+  if t==script[script_index].t then
+    draw=script[script_index].draw
+    update=script[script_index].update
+    if (script[script_index].init) script[script_index].init()
+    script_index+=1
+  end
   if (update) update()
   t+=1
-  if t>120 then
-    draw=fadeout_draw
-  end
 end
    
 function _draw()
@@ -45,3 +56,13 @@ function fadeout_draw()
     end
   end
 end
+
+function lens_init()
+end
+
+function lens_update()
+end
+
+function lens_draw()
+end
+

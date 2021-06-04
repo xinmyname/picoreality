@@ -32,6 +32,7 @@ func main() {
 	fmt.Println(mainLuaText)
 	fmt.Println("-->8")
 	fmt.Println("data={}")
+
 	fmt.Print("data.title_pal={")
 	for i := 0; i < 16; i += 1 {
 		dstPalMap[dstPal[i]] = i
@@ -41,6 +42,8 @@ func main() {
 		fmt.Printf("%v", dstIndices[i])
 	}
 	fmt.Println("}")
+
+	fmt.Println("data.lens_pal={0,1,130,131,4,5,134,128,129,132,133,141,140,13,143,15}")
 
 	fmt.Println("__gfx__")
 
