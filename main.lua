@@ -1,5 +1,5 @@
 function _init()
-  -- switch upper ROM to RAM, render sprite 0 opaque
+  -- switch upper rom to ram, render sprite 0 opaque
   poke(0x5f36,0x18)
   palt(0,false)
   update=nil
@@ -58,11 +58,20 @@ function fadeout_draw()
 end
 
 function lens_init()
+  for i=1,16 do
+    pal(i-1,data.lens_pal[i],1)
+  end
 end
 
 function lens_update()
 end
 
 function lens_draw()
+ cls()
+	for y=0,3 do
+		for x=0,3 do
+			c=y*4+x
+      rectfill(x*16,y*16,x*16+15,y*16+15, c)
+		end
+	end
 end
-
