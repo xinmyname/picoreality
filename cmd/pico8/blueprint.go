@@ -1,4 +1,4 @@
-package main
+package pico8
 
 import (
 	"encoding/json"

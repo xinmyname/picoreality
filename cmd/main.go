@@ -1,10 +1,9 @@
 package main
 
 import (
-	"bytes"
+	"cartgen/pico8"
 	"fmt"
 	"image"
-	"image/color"
 	"image/draw"
 	"os"
 	"path/filepath"
@@ -19,18 +18,17 @@ func main() {
 		os.Exit(1)
 	}
 
-	bp := LoadBlueprint(os.Args[1])
+	bp := pico8.LoadBlueprint(os.Args[1])
 	mainLuaText := bp.LoadMainLuaText()
 
 	titleImage := bp.LoadTitleImage()
-	dstTitlePal, dstTitlePicoPal, dstTitlePicoColorMap := OptimumPalette(titleImage)
+	dstTitlePal, dstTitlePicoPal := pico8.OptimumPalette(titleImage)
 	dstTitleImage := image.NewPaletted(titleImage.Bounds(), dstTitlePal)
 	draw.FloydSteinberg.Draw(dstTitleImage, titleImage.Bounds(), titleImage, image.Point{})
 
 	monsterImage := bp.LoadMonsterImage()
-	dstMonster, dstMonsterPicoPal, _ := OptimumPalette(monsterImage)
-	dstMonsterMap := make(map[color.Color]int)
-	dstMonsterImage := image.NewPaletted(monsterImage.Bounds(), dstMonster)
+	dstMonsterPal, dstMonsterPicoPal := pico8.CustomPalette([]int{0, 1, 130, 131, 4, 5, 134, 128, 129, 132, 133, 141, 140, 13, 143, 15})
+	dstMonsterImage := image.NewPaletted(monsterImage.Bounds(), dstMonsterPal)
 	draw.FloydSteinberg.Draw(dstMonsterImage, monsterImage.Bounds(), monsterImage, image.Point{})
 
 	fmt.Println("pico-8 cartridge // http://www.pico-8.com")
@@ -42,27 +40,16 @@ func main() {
 
 	fmt.Printf("data.title_pal={%s}\n", strings.Trim(strings.Join(strings.Fields(fmt.Sprint(dstTitlePicoPal)), ","), "[]"))
 	fmt.Printf("data.monster_pal={%s}\n", strings.Trim(strings.Join(strings.Fields(fmt.Sprint(dstMonsterPicoPal)), ","), "[]"))
-	fmt.Println("data.lens_pal={0,1,130,131,4,5,134,128,129,132,133,141,140,13,143,15}")
 
-	var monsterBuffer bytes.Buffer
-
-	for y := 0; y < 128; y += 1 {
-		for x := 0; x < 64; x += 1 {
-			c1 := dstMonsterMap[dstMonsterImage.At(x*2, y)]
-			c2 := dstMonsterMap[dstMonsterImage.At(x*2+1, y)]
-			monsterBuffer.WriteByte(byte(c1<<4 | c2))
-		}
-	}
+	fmt.Printf("data.monster_image=\"")
+	monsterBytes := pico8.ImageToBytes(dstMonsterImage)
+	pico8.WriteBytesAsText(monsterBytes, os.Stdout)
+	fmt.Printf("\"\n")
 
 	fmt.Println("__gfx__")
 
-	for y := 0; y < 128; y += 1 {
-		for x := 0; x < 64; x += 1 {
-			c1 := dstTitlePicoColorMap[dstTitleImage.At(x*2, y)]
-			c2 := dstTitlePicoColorMap[dstTitleImage.At(x*2+1, y)]
-			fmt.Printf("%02x", c1<<4|c2)
-		}
-		fmt.Println()
+	for line := range pico8.ImageToHexLines(dstTitleImage) {
+		fmt.Println(line)
 	}
 
 	fmt.Println("__map__")

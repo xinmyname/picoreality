@@ -59,7 +59,7 @@ end
 
 function lens_init()
   for i=1,16 do
-    pal(i-1,data.lens_pal[i],1)
+    pal(i-1,data.monster_pal[i],1)
   end
 end
 
