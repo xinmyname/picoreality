@@ -28,8 +28,9 @@ func LoadBlueprint(path string) blueprint {
 }
 
 type blueprint struct {
-	TitlePath string
-	MainPath  string
+	TitlePath   string
+	MainPath    string
+	MonsterPath string
 }
 
 func (bp blueprint) LoadMainLuaText() string {
@@ -45,6 +46,24 @@ func (bp blueprint) LoadMainLuaText() string {
 func (bp blueprint) LoadTitleImage() image.Image {
 
 	f, err := os.Open(bp.TitlePath)
+
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+
+	defer f.Close()
+
+	img, _, err := image.Decode(f)
+
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+
+	return img
+}
+
+func (bp blueprint) LoadMonsterImage() image.Image {
+	f, err := os.Open(bp.MonsterPath)
 
 	if err != nil {
 		log.Fatal(err.Error())

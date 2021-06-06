@@ -121,7 +121,7 @@ func (pal LabPalette) ClosestIndex(color color.Color) int {
 	return index
 }
 
-func OptimumPalette(img image.Image) (color.Palette, []int) {
+func OptimumPalette(img image.Image) (color.Palette, []int, map[color.Color]int) {
 
 	var rgbpal = color.Palette{
 		color.RGBA{0, 0, 0, 0xff},       // 0 : black
@@ -178,6 +178,7 @@ func OptimumPalette(img image.Image) (color.Palette, []int) {
 	}
 
 	pico8pal := make([]int, 0, 16)
+	colorMap := make(map[color.Color]int)
 
 	sort.Sort(sort.Reverse(sort.IntSlice(indices)))
 
@@ -192,7 +193,30 @@ func OptimumPalette(img image.Image) (color.Palette, []int) {
 		}
 
 		pico8pal = append(pico8pal, val)
+		colorMap[optpal[i]] = i
 	}
 
-	return optpal, pico8pal
+	return optpal, pico8pal, colorMap
+}
+
+func LensPalette() color.Palette {
+
+	return color.Palette{
+		color.RGBA{0, 0, 0, 0xff},       // 0 : black
+		color.RGBA{29, 43, 83, 0xff},    // 1 : dark-blue
+		color.RGBA{66, 33, 54, 0xff},    // 130 : darker-purple
+		color.RGBA{18, 83, 89, 0xff},    // 131 : blue-green
+		color.RGBA{171, 82, 54, 0xff},   // 4 : brown
+		color.RGBA{95, 87, 79, 0xff},    // 5 : dark-grey
+		color.RGBA{162, 136, 121, 0xff}, // 134 : medium-grey
+		color.RGBA{41, 24, 20, 0xff},    // 128 : darkest-grey
+		color.RGBA{17, 29, 53, 0xff},    // 129 : darker-blue
+		color.RGBA{116, 47, 41, 0xff},   // 132 : dark-brown
+		color.RGBA{73, 51, 59, 0xff},    // 133 : darker-grey
+		color.RGBA{117, 70, 101, 0xff},  // 141 : mauve
+		color.RGBA{6, 90, 181, 0xff},    // 140 : medium-blue
+		color.RGBA{131, 118, 156, 0xff}, // 13 : lavender
+		color.RGBA{255, 157, 129, 0xff}, // 143 : peach
+		color.RGBA{255, 204, 170, 0xff}, // 15 : light-peach
+	}
 }

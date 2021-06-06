@@ -1,12 +1,14 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"image"
 	"image/color"
 	"image/draw"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 func main() {
@@ -19,12 +21,17 @@ func main() {
 
 	bp := LoadBlueprint(os.Args[1])
 	mainLuaText := bp.LoadMainLuaText()
-	titleImage := bp.LoadTitleImage()
 
-	dstPal, dstIndices := OptimumPalette(titleImage)
-	dstPalMap := make(map[color.Color]int)
-	dstImage := image.NewPaletted(titleImage.Bounds(), dstPal)
-	draw.FloydSteinberg.Draw(dstImage, titleImage.Bounds(), titleImage, image.Point{})
+	titleImage := bp.LoadTitleImage()
+	dstTitlePal, dstTitlePicoPal, dstTitlePicoColorMap := OptimumPalette(titleImage)
+	dstTitleImage := image.NewPaletted(titleImage.Bounds(), dstTitlePal)
+	draw.FloydSteinberg.Draw(dstTitleImage, titleImage.Bounds(), titleImage, image.Point{})
+
+	monsterImage := bp.LoadMonsterImage()
+	dstMonster, dstMonsterPicoPal, _ := OptimumPalette(monsterImage)
+	dstMonsterMap := make(map[color.Color]int)
+	dstMonsterImage := image.NewPaletted(monsterImage.Bounds(), dstMonster)
+	draw.FloydSteinberg.Draw(dstMonsterImage, monsterImage.Bounds(), monsterImage, image.Point{})
 
 	fmt.Println("pico-8 cartridge // http://www.pico-8.com")
 	fmt.Println("version 32")
@@ -33,24 +40,26 @@ func main() {
 	fmt.Println("-->8")
 	fmt.Println("data={}")
 
-	fmt.Print("data.title_pal={")
-	for i := 0; i < 16; i += 1 {
-		dstPalMap[dstPal[i]] = i
-		if i > 0 {
-			fmt.Print(",")
-		}
-		fmt.Printf("%v", dstIndices[i])
-	}
-	fmt.Println("}")
-
+	fmt.Printf("data.title_pal={%s}\n", strings.Trim(strings.Join(strings.Fields(fmt.Sprint(dstTitlePicoPal)), ","), "[]"))
+	fmt.Printf("data.monster_pal={%s}\n", strings.Trim(strings.Join(strings.Fields(fmt.Sprint(dstMonsterPicoPal)), ","), "[]"))
 	fmt.Println("data.lens_pal={0,1,130,131,4,5,134,128,129,132,133,141,140,13,143,15}")
+
+	var monsterBuffer bytes.Buffer
+
+	for y := 0; y < 128; y += 1 {
+		for x := 0; x < 64; x += 1 {
+			c1 := dstMonsterMap[dstMonsterImage.At(x*2, y)]
+			c2 := dstMonsterMap[dstMonsterImage.At(x*2+1, y)]
+			monsterBuffer.WriteByte(byte(c1<<4 | c2))
+		}
+	}
 
 	fmt.Println("__gfx__")
 
 	for y := 0; y < 128; y += 1 {
 		for x := 0; x < 64; x += 1 {
-			c1 := dstPalMap[dstImage.At(x*2, y)]
-			c2 := dstPalMap[dstImage.At(x*2+1, y)]
+			c1 := dstTitlePicoColorMap[dstTitleImage.At(x*2, y)]
+			c2 := dstTitlePicoColorMap[dstTitleImage.At(x*2+1, y)]
 			fmt.Printf("%02x", c1<<4|c2)
 		}
 		fmt.Println()
