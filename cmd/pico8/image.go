@@ -29,7 +29,7 @@ func ImageToHexLines(img *image.Paletted) <-chan string {
 
 	ch := make(chan string)
 	go func() {
-
+		defer close(ch)
 		stride := img.Bounds().Dx() / 2
 		height := img.Bounds().Dy()
 

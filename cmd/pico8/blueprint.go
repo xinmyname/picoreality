@@ -30,11 +30,22 @@ func LoadBlueprint(path string) blueprint {
 type blueprint struct {
 	TitlePath   string
 	MainPath    string
+	DataPath    string
 	MonsterPath string
 }
 
 func (bp blueprint) LoadMainLuaText() string {
 	text, err := ioutil.ReadFile(bp.MainPath)
+
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+
+	return string(text)
+}
+
+func (bp blueprint) LoadDataLuaText() string {
+	text, err := ioutil.ReadFile(bp.DataPath)
 
 	if err != nil {
 		log.Fatal(err.Error())

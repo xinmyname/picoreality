@@ -20,6 +20,7 @@ func main() {
 
 	bp := pico8.LoadBlueprint(os.Args[1])
 	mainLuaText := bp.LoadMainLuaText()
+	dataLuaText := bp.LoadDataLuaText()
 
 	titleImage := bp.LoadTitleImage()
 	dstTitlePal, dstTitlePicoPal := pico8.OptimumPalette(titleImage)
@@ -40,11 +41,12 @@ func main() {
 
 	fmt.Printf("data.title_pal={%s}\n", strings.Trim(strings.Join(strings.Fields(fmt.Sprint(dstTitlePicoPal)), ","), "[]"))
 	fmt.Printf("data.monster_pal={%s}\n", strings.Trim(strings.Join(strings.Fields(fmt.Sprint(dstMonsterPicoPal)), ","), "[]"))
-
 	fmt.Printf("data.monster_image=\"")
-	monsterBytes := pico8.ImageToBytes(dstMonsterImage)
+	monsterBytes := pico8.Px9Compress(dstMonsterImage)
 	pico8.WriteBytesAsText(monsterBytes, os.Stdout)
 	fmt.Printf("\"\n")
+	fmt.Println("")
+	fmt.Println(dataLuaText)
 
 	fmt.Println("__gfx__")
 
