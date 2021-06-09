@@ -1,6 +1,7 @@
 {
-    "TitlePath": "./art/picoreality.png",
+    "TitlePath": "./asset/picoreality.png",
     "MainPath": "./main.lua",
     "DataPath": "./data.lua",
-    "MonsterPath": "./art/monster.png"
+    "MonsterPath": "./asset/monster.png",
+    "AtomicPath": "./asset/atomic.u8"
 }

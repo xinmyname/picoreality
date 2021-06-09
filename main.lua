@@ -10,7 +10,8 @@ function _init()
 	script={
 		{ t=0, draw=title_draw },
 		{ t=120, draw=fadeout_draw },
-		{ t=175, init=monster_init, draw=monster_draw, update=monster_update}
+		{ t=175, init=monster_init, draw=monster_draw, update=monster_update},
+		{ t=295, init=lens_init, draw=lens_draw, update=lens_update}
 	}
 end
 	 
@@ -62,11 +63,56 @@ function monster_init()
 		pal(i-1,data.monster_pal[i],1)
 	end
 	px9_decomp(0,0,data.monster_image,sget,sset)
+	audio={}
+	audio.base=0x4300
+	audio.len=#data.atomic_audio
+	audio.pos=0
+	audio.playing=true
+	audio.buffered=0
+
 end
 
 function monster_update()
+
+	if (not audio.playing) return
+
+	audio.buffered = stat(108)
+
+	if (audio.buffered<512) then
+		local size = audio.pos - audio.len
+		
+		if (size < -256) then
+			size = 256
+		else
+			size *= -1
+			audio.playing=false
+		end		
+		
+		for i=1,size do
+			poke(audio.base+(i-1), ord(sub(data.atomic_audio,i+audio.pos,i+audio.pos)))
+		end
+		
+		serial(0x808,audio.base,size)
+		
+		if (audio.playing) then
+			audio.pos += size
+		else
+			audio.pos = 0
+		end
+	end
+
+
 end
 
 function monster_draw()
 	map(0,0,0,0,16,16)
+end
+
+function lens_init()
+end
+
+function lens_update()
+end
+
+function lens_draw()
 end

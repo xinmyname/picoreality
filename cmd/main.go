@@ -19,8 +19,6 @@ func main() {
 	}
 
 	bp := pico8.LoadBlueprint(os.Args[1])
-	mainLuaText := bp.LoadMainLuaText()
-	dataLuaText := bp.LoadDataLuaText()
 
 	titleImage := bp.LoadTitleImage()
 	dstTitlePal, dstTitlePicoPal := pico8.OptimumPalette(titleImage)
@@ -35,7 +33,7 @@ func main() {
 	fmt.Println("pico-8 cartridge // http://www.pico-8.com")
 	fmt.Println("version 32")
 	fmt.Println("__lua__")
-	fmt.Println(mainLuaText)
+	fmt.Println(bp.LoadMainLuaText())
 	fmt.Println("-->8")
 	fmt.Println("data={}")
 
@@ -45,8 +43,11 @@ func main() {
 	monsterBytes := pico8.Px9Compress(dstMonsterImage)
 	pico8.WriteBytesAsText(monsterBytes, os.Stdout)
 	fmt.Printf("\"\n")
+	fmt.Printf("data.atomic_audio=\"")
+	pico8.WriteBytesAsText(bp.LoadAtomicBytes(), os.Stdout)
+	fmt.Printf("\"\n")
 	fmt.Println("")
-	fmt.Println(dataLuaText)
+	fmt.Println(bp.LoadDataLuaText())
 
 	fmt.Println("__gfx__")
 

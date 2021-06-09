@@ -32,6 +32,7 @@ type blueprint struct {
 	MainPath    string
 	DataPath    string
 	MonsterPath string
+	AtomicPath  string
 }
 
 func (bp blueprint) LoadMainLuaText() string {
@@ -89,4 +90,22 @@ func (bp blueprint) LoadMonsterImage() image.Image {
 	}
 
 	return img
+}
+
+func (bp blueprint) LoadAtomicBytes() []byte {
+	f, err := os.Open(bp.AtomicPath)
+
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+
+	defer f.Close()
+
+	bytes, err := ioutil.ReadAll(f)
+
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+
+	return bytes
 }
