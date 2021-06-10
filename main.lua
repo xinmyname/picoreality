@@ -10,8 +10,9 @@ function _init()
 	script={
 		{ t=0, draw=title_draw },
 		{ t=120, draw=fadeout_draw },
-		{ t=175, init=monster_init, draw=monster_draw, update=monster_update},
-		{ t=295, init=lens_init, draw=lens_draw, update=lens_update}
+		{ t=175, init=lens_init, draw=lens_draw, update=lens_update},
+		{ t=475, init=monster_init, draw=monster_draw, update=monster_update},
+		{ t=775, init=spin_init, draw=spin_draw, update=spin_update}
 	}
 end
 	 
@@ -58,11 +59,32 @@ function fadeout_draw()
 	end
 end
 
-function monster_init()
+function lens_init()
 	for i=1,16 do
 		pal(i-1,data.monster_pal[i],1)
 	end
 	px9_decomp(0,0,data.monster_image,sget,sset)
+	lens_pat=0b1010010110100101.1	
+end
+
+function lens_update()
+end
+
+function lens_draw()
+	map(0,0,0,0,16,16)
+	fillp()
+	for y=0,49 do
+		for x=0,49 do
+			pset(x,y,pget(x+12,y+12))
+		end
+	end
+
+	lens_pat^^=0xffff
+	fillp(lens_pat)
+	circfill(24, 24, 24, 12)
+end
+
+function monster_init()
 	audio={}
 	audio.base=0x4300
 	audio.len=#data.atomic_audio
@@ -108,11 +130,12 @@ function monster_draw()
 	map(0,0,0,0,16,16)
 end
 
-function lens_init()
+
+function spin_init()
 end
 
-function lens_update()
+function spin_update()
 end
 
-function lens_draw()
+function spin_draw()
 end

@@ -1,6 +1,7 @@
 package pico8
 
 import (
+	"fmt"
 	"io"
 )
 
@@ -37,4 +38,22 @@ func WriteBytesAsText(bytes []byte, writer writer) {
 		}
 	}
 
+}
+
+func WriteSlicesAsText(values [][]int, writer writer) {
+	writer.WriteString("{")
+	for y, outer := range values {
+		if y > 0 {
+			writer.WriteString(",")
+		}
+		writer.WriteString("{")
+		for x, value := range outer {
+			if x > 0 {
+				writer.WriteString(",")
+			}
+			writer.WriteString(fmt.Sprintf("%d", value))
+		}
+		writer.WriteString("}\n")
+	}
+	writer.WriteString("}\n")
 }

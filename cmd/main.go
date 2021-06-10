@@ -46,6 +46,17 @@ func main() {
 	fmt.Printf("data.atomic_audio=\"")
 	pico8.WriteBytesAsText(bp.LoadAtomicBytes(), os.Stdout)
 	fmt.Printf("\"\n")
+
+	xoffsets, yoffsets := pico8.CalculateLensLUT()
+
+	fmt.Printf("data.xoffsets=")
+	pico8.WriteSlicesAsText(xoffsets, os.Stdout)
+	fmt.Printf("\n")
+
+	fmt.Printf("data.yoffsets=")
+	pico8.WriteSlicesAsText(yoffsets, os.Stdout)
+	fmt.Printf("\n")
+
 	fmt.Println("")
 	fmt.Println(bp.LoadDataLuaText())
 

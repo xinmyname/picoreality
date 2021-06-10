@@ -73,3 +73,4 @@ Color | Hex     | RGB           | Name          | 565    | Crushed RGB
 ## References
 * [http://members.chello.at/~easyfilter/bresenham.html]()
 * [https://www.lexaloffle.com/bbs/?pid=f2ba]()
+* [http://marcodiiga.github.io/radial-lens-undistortion-filtering]()
