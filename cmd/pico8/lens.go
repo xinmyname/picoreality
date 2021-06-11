@@ -52,15 +52,15 @@ func CalculateLensLUT() (xoffsets [][]int, yoffsets [][]int) {
 			if r <= 1.0 {
 				u = int(r*m + j)
 
-				//if xs < 0 {
-				//	u *= -1
-				//}
+				if xs < 0 {
+					u *= -1
+				}
 
 				v = int(r*m + j)
 
-				//if ys < 0 {
-				//	v *= -1
-				//}
+				if ys < 0 {
+					v *= -1
+				}
 			}
 
 			//fmt.Printf("%d ", v)

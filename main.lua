@@ -82,7 +82,7 @@ function lens_draw()
 		for x=0,41 do
 			xofs=data.xoffsets[y+1][x+1]
 			yofs=data.yoffsets[y+1][x+1]
-			pset(x+xm-21,y+ym-21,pget(x+xofs+xm-21,y+yofs+ym-21))
+			pset(x+xm-21,y+ym-21,sget(x+xofs+xm-21,y+yofs+ym-21))
 		end
 	end
 
