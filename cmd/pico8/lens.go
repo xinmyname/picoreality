@@ -40,7 +40,7 @@ func CalculateLensLUT() (xoffsets [][]int, yoffsets [][]int) {
 			t := float64(ys) / cy
 
 			r := math.Sqrt(s*s + t*t)
-			m := 5.0 * math.Pow(r, 2)
+			m := 8.0 * math.Pow(r, 2)
 			j := 0.0
 			if r < 0.7 {
 				j = ((rand.Float64() - 0.5) * 2.0) * 1.5
