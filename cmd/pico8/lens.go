@@ -41,7 +41,7 @@ func CalculateLensLUT() (xoffsets [][]int, yoffsets [][]int) {
 
 			r := math.Sqrt(s*s + t*t)
 			m := 5.0 * math.Pow(r, 2)
-			j := 0.0 //((rand.Float64() - 0.5) * 2.0) * 1
+			j := 0.0
 			if r < 0.7 {
 				j = ((rand.Float64() - 0.5) * 2.0) * 1.5
 			}
@@ -63,12 +63,9 @@ func CalculateLensLUT() (xoffsets [][]int, yoffsets [][]int) {
 				}
 			}
 
-			//fmt.Printf("%d ", v)
-
 			xoffsets[y][x] = u
 			yoffsets[y][x] = v
 		}
-		//fmt.Println()
 	}
 
 	return
