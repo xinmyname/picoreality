@@ -8,11 +8,12 @@ function _init()
 	fading=0
 	script_index=1
 	script={
-		{ t=0, draw=title_draw },
-		{ t=120, draw=fadeout_draw },
-		{ t=175, init=lens_init, draw=lens_draw, update=lens_update},
-		{ t=475, init=monster_init, draw=monster_draw, update=monster_update},
-		{ t=775, init=spin_init, draw=spin_draw, update=spin_update}
+		{ t=0, init=lens_init, draw=lens_draw, update=lens_update},
+--		{ t=0, draw=title_draw },
+--		{ t=120, draw=fadeout_draw },
+--		{ t=175, init=lens_init, draw=lens_draw, update=lens_update},
+--		{ t=475, init=monster_init, draw=monster_draw, update=monster_update},
+		{ t=9775, init=spin_init, draw=spin_draw, update=spin_update}
 	}
 end
 	 
@@ -65,33 +66,39 @@ function lens_init()
 	end
 	px9_decomp(0,0,data.monster_image,sget,sset)
 	lens_pat=0b1010010110100101.1	
+ xm=0
+ ym=0
+ poke(0x5f2d, 1)
 end
 
 function lens_update()
+	xm=stat(32)
+	ym=stat(33)
 end
 
 function lens_draw()
 	map(0,0,0,0,16,16)
-	fillp()
-	for y=0,49 do
-		for x=0,49 do
-			pset(x,y,pget(x+12,y+12))
+	for y=0,41 do
+		for x=0,41 do
+			xofs=data.xoffsets[y+1][x+1]
+			yofs=data.yoffsets[y+1][x+1]
+			pset(x+xm-21,y+ym-21,pget(x+xofs+xm-21,y+yofs+ym-21))
 		end
 	end
 
 	lens_pat^^=0xffff
 	fillp(lens_pat)
-	circfill(24, 24, 24, 12)
+	circfill(xm, ym, 21, 12)
 end
 
 function monster_init()
+	cls()
 	audio={}
 	audio.base=0x4300
 	audio.len=#data.atomic_audio
 	audio.pos=0
-	audio.playing=true
 	audio.buffered=0
-
+	audio.playing=true
 end
 
 function monster_update()
