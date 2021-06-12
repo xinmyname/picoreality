@@ -8,12 +8,12 @@ function _init()
 	fading=0
 	script_index=1
 	script={
-		{ t=0, init=lens_init, draw=lens_draw, update=lens_update},
---		{ t=0, draw=title_draw },
---		{ t=120, draw=fadeout_draw },
---		{ t=175, init=lens_init, draw=lens_draw, update=lens_update},
---		{ t=475, init=monster_init, draw=monster_draw, update=monster_update},
-		{ t=9775, init=spin_init, draw=spin_draw, update=spin_update}
+--		{ t=0, init=lens_init, draw=lens_draw, update=lens_update},
+		{ t=0, draw=title_draw },
+  	{ t=120, draw=fadeout_draw },
+		{ t=175, init=lens_init, draw=lens_draw, update=lens_update},
+		{ t=475, init=monster_init, draw=monster_draw, update=monster_update},
+		{ t=775, init=spin_init, draw=spin_draw, update=spin_update}
 	}
 end
 	 
@@ -46,15 +46,13 @@ function fadeout_draw()
 	fading+=1
 	if fading%5==1 then
 		for i=0,15 do
-			c=peek(24336+i)
+			c=peek(0x5f10+i)
 			if (c>=128) c-=112
 			p=fade[c]
 			if (p>=16) p+=112
 			pal(i,p,1)
 		end
 		if fading==7*5+1 then
-			cls()
-			pal()
 			fading=-1
 		end
 	end
@@ -68,27 +66,49 @@ function lens_init()
 	lens_pat=0b1010010110100101.1	
  xm=0
  ym=0
- poke(0x5f2d, 1)
+	lx=24
+	ly=1
+	lr=21
+	vx=1
+	vy=2
+	l=0
+	r=128-(lr<<1)
+	b=128-(lr<<1) 
+	bounces=0		
 end
 
 function lens_update()
-	xm=stat(32)
-	ym=stat(33)
+	vy+=0.1
+	
+	lx+=vx
+	ly+=vy
+
+	if ly>=b then
+		ly=b
+		vx=vx*0.95
+		vy=vy*-0.85
+		bounces+=1
+		if (bounces>3) b=32767
+	end	
+
+	if lx>r or lx<l then
+		vx=vx*-0.85
+	end
 end
 
 function lens_draw()
 	map(0,0,0,0,16,16)
-	for y=0,41 do
-		for x=0,41 do
-			xofs=data.xoffsets[y+1][x+1]
-			yofs=data.yoffsets[y+1][x+1]
-			pset(x+xm-21,y+ym-21,sget(x+xofs+xm-21,y+yofs+ym-21))
+	for y=1,42 do
+		xlut=data.xoffsets[y]
+		ylut=data.yoffsets[y]
+		for x=1,42 do
+			pset(x+lx,y+ly,sget(x+lx+xlut[x],y+ly+ylut[x]))
 		end
 	end
 
 	lens_pat^^=0xffff
 	fillp(lens_pat)
-	circfill(xm, ym, 21, 12)
+	circfill(lx+lr,ly+lr,lr,12)
 end
 
 function monster_init()
