@@ -8,12 +8,12 @@ function _init()
 	fading=0
 	script_index=1
 	script={
---		{ t=0, init=lens_init, draw=lens_draw, update=lens_update},
 		{ t=0, draw=title_draw },
-  	{ t=120, draw=fadeout_draw },
+		{ t=120, draw=fadeout_draw },
 		{ t=175, init=lens_init, draw=lens_draw, update=lens_update},
 		{ t=475, init=monster_init, draw=monster_draw, update=monster_update},
-		{ t=775, init=spin_init, draw=spin_draw, update=spin_update}
+		{ t=575, draw=whiteout_draw },
+		{ t=630, init=spin_init, draw=spin_draw, update=spin_update}
 	}
 end
 	 
@@ -157,12 +157,33 @@ function monster_draw()
 	map(0,0,0,0,16,16)
 end
 
-
+function whiteout_draw()
+		local fade,c,p={[0]=17,28,24,27,25,22,7,7,6,10,23,26,6,6,15,7,2,1,2,3,4,5,6,7,8,9,23,26,12,13,15,15}
+		fading+=1
+		if fading%3==1 then
+			for i=0,15 do
+				c=peek(0x5f10+i)
+				if (c>=128) c-=112
+				p=fade[c]
+				if (p>=16) p+=112
+				pal(i,p,1)
+			end
+			if fading==7*5+1 then
+				fading=-1
+			end
+		end
+	end
+	
 function spin_init()
+ cls()
+	for i=1,16 do
+		pal(i-1,data.monster_pal[i],1)
+	end
 end
 
 function spin_update()
 end
 
 function spin_draw()
+	map(0,0,0,0,16,16)
 end

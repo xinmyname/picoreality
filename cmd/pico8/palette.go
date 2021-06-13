@@ -42,6 +42,52 @@ var Pico8RGBAPalette = color.Palette{
 	color.RGBA{255, 157, 129, 0xff}, // 143 : peach
 }
 
+func LightToDarkGradientPalette() (color.Palette, []int) {
+
+	sortedPal := make([]color.Color, len(Pico8RGBAPalette))
+	copy(sortedPal, Pico8RGBAPalette)
+
+	sort.SliceStable(sortedPal, func(i, j int) bool {
+		return makeLabColor(sortedPal[i]).L > makeLabColor(sortedPal[j]).L
+	})
+
+	indices := []int{}
+
+	for i := 0; i < len(sortedPal); i += 1 {
+		for j := 0; j < len(Pico8RGBAPalette); j += 1 {
+			if sortedPal[i] == Pico8RGBAPalette[j] {
+				indices = append(indices, j)
+				break
+			}
+		}
+	}
+
+	return sortedPal, indices
+}
+
+func DarkToLightGradientPalette() (color.Palette, []int) {
+
+	sortedPal := make([]color.Color, len(Pico8RGBAPalette))
+	copy(sortedPal, Pico8RGBAPalette)
+
+	sort.SliceStable(sortedPal, func(i, j int) bool {
+		return makeLabColor(sortedPal[i]).L < makeLabColor(sortedPal[j]).L
+	})
+
+	indices := []int{}
+
+	for i := 0; i < len(sortedPal); i += 1 {
+		for j := 0; j < len(Pico8RGBAPalette); j += 1 {
+			if sortedPal[i] == Pico8RGBAPalette[j] {
+				indices = append(indices, j)
+				break
+			}
+		}
+	}
+
+	return sortedPal, indices
+}
+
 func OptimumPalette(img image.Image) (color.Palette, []int) {
 
 	labPal := makeLabPalette(Pico8RGBAPalette)

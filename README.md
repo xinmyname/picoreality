@@ -1,11 +1,12 @@
 # PICO Reality
 
 ## TODO
-* [ ] Palette flash to white
+* [X] Palette flash to white
 * [ ] Convert lens offset LUTs to data strings, unpack in working memory
 * [ ] tline for image rotation
 * [ ] Better lens center, should zoom slightly
 * [ ] Can lens be bigger with newer LUTs?
+* [ ] Slow down lens bouncing - total bouncing time should be ~10 seconds
 * [ ] Compress orch hit
 * [ ] Variable rate audio playback
 * [ ] Why doesn't memory based pixel read work properly? (doesn't matter - too slow)
@@ -59,6 +60,17 @@ Color | Hex     | RGB           | Name
 	  end
 	end
 
+## Manual palette fade-out/white-out
+
+For each I below, locate in palette index that is darker and enter it as DI
+
+	I:   0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31
+	DI:  0 17 18 19 20 16 22  6 24 25  9 27 28 29 29 31  0  0 16 17 16 16  5  0  2  4  0  3  1 18  2  4
+
+For each I below, locate in palette index that is lighter and enter it as DI
+
+	I:   0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31
+	LI: 17 28 24 27 25 22  7  7  6 10 23 26  6  6 15  7  2  1  2  3  4  5  6  7  8  9 23 26 12 13 15 15  
 
 ## References
 * [http://members.chello.at/~easyfilter/bresenham.html]()

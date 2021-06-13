@@ -45,3 +45,26 @@ func ImageToHexLines(img *image.Paletted) <-chan string {
 	}()
 	return ch
 }
+
+func NewPaletteImage(indices []int) image.Image {
+
+	width := len(indices)
+	height := width
+	tl := image.Point{0, 0}
+	br := image.Point{width, height}
+
+	img := image.NewRGBA(image.Rectangle{tl, br})
+
+	for y := 0; y < height; y += 1 {
+		for x := 0; x < width; x += 1 {
+			idx := indices[x]
+			if idx >= 128 {
+				idx -= 112
+			}
+			v := Pico8RGBAPalette[idx]
+			img.Set(x, y, v)
+		}
+	}
+
+	return img
+}
