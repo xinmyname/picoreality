@@ -7,6 +7,7 @@
 * [ ] Better lens center, should zoom slightly
 * [ ] Can lens be bigger with newer LUTs?
 * [ ] Slow down lens bouncing - total bouncing time should be ~10 seconds
+* [ ] Use a smaller 64x64, less dithered image for spinning
 * [ ] Compress orch hit
 * [ ] Variable rate audio playback
 * [ ] Why doesn't memory based pixel read work properly? (doesn't matter - too slow)
