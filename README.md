@@ -2,14 +2,17 @@
 
 ## TODO
 * [X] Palette flash to white
-* [ ] Convert lens offset LUTs to data strings, unpack in working memory
+* [ ] Calculate u,v,du,dv as coordinates in 2x2 quad of map for tline
 * [ ] tline for image rotation
+* [ ] Convert lens offset LUTs to data strings, unpack in working memory
+* [ ] Re-purpose two SFX instruments for sample playback markers
+* [ ] Bresenham-scale audio playback from 440Hz (C2) @ 5512Hz - maybe a LUT?
+* [ ] Move audio playback into _update60()
+* [ ] Compress orch hit
 * [ ] Better lens center, should zoom slightly
 * [ ] Can lens be bigger with newer LUTs?
 * [ ] Slow down lens bouncing - total bouncing time should be ~10 seconds
 * [ ] Use a smaller 64x64, less dithered image for spinning
-* [ ] Compress orch hit
-* [ ] Variable rate audio playback
 * [ ] Why doesn't memory based pixel read work properly? (doesn't matter - too slow)
 
 ## Build cartgen
@@ -80,6 +83,10 @@ For each I below, locate in palette index that is lighter and enter it as DI
 
 ## The Land of Dead Ideas That Didn't Work But That I Don't Want to Forget
 
+###
+cos(0.76993)=0.1251
+sin(0.51993)=0.1251
+cos(0.26)
 ### Read sprite pixel
 peek((sy<<6)+(sx>>1))>>((sx&1)<<2)&0xf
 
